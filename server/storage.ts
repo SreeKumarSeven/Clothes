@@ -104,23 +104,24 @@ export class DatabaseStorage implements IStorage {
     limit?: number;
     offset?: number;
   }): Promise<Product[]> {
-    let query = db.select().from(products).where(eq(products.isActive, true));
+    const conditions = [eq(products.isActive, true)];
     
     if (filters?.category) {
-      query = query.where(eq(products.category, filters.category as any));
+      conditions.push(eq(products.category, filters.category as any));
     }
     
     if (filters?.search) {
-      query = query.where(
+      conditions.push(
         sql`${products.name} ILIKE ${`%${filters.search}%`} OR ${products.description} ILIKE ${`%${filters.search}%`} OR ${products.brand} ILIKE ${`%${filters.search}%`}`
       );
     }
     
     if (filters?.featured) {
-      query = query.where(eq(products.isFeatured, true));
+      conditions.push(eq(products.isFeatured, true));
     }
     
-    query = query.orderBy(desc(products.createdAt));
+    let query = db.select().from(products).where(and(...conditions))
+      .orderBy(desc(products.createdAt));
     
     if (filters?.limit) {
       query = query.limit(filters.limit);
@@ -156,16 +157,21 @@ export class DatabaseStorage implements IStorage {
     const result = await db.update(products)
       .set({ isActive: false })
       .where(eq(products.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   // Cart operations
   async getCartItems(userId: string): Promise<(CartItem & { product: Product })[]> {
-    return await db
+    const result = await db
       .select()
       .from(cartItems)
       .innerJoin(products, eq(cartItems.productId, products.id))
       .where(eq(cartItems.userId, userId));
+    
+    return result.map(row => ({
+      ...row.cart_items,
+      product: row.products
+    }));
   }
 
   async addToCart(cartItem: InsertCartItem): Promise<CartItem> {
@@ -186,7 +192,7 @@ export class DatabaseStorage implements IStorage {
       // Update quantity
       const [updated] = await db
         .update(cartItems)
-        .set({ quantity: existing.quantity + cartItem.quantity })
+        .set({ quantity: (existing.quantity ?? 0) + (cartItem.quantity ?? 1) })
         .where(eq(cartItems.id, existing.id))
         .returning();
       return updated;
@@ -207,7 +213,7 @@ export class DatabaseStorage implements IStorage {
 
   async removeFromCart(id: string): Promise<boolean> {
     const result = await db.delete(cartItems).where(eq(cartItems.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   async clearCart(userId: string): Promise<boolean> {
@@ -256,7 +262,10 @@ export class DatabaseStorage implements IStorage {
           .innerJoin(products, eq(orderItems.productId, products.id))
           .where(eq(orderItems.orderId, order.id));
         
-        return { ...order, orderItems: items };
+        return { ...order, orderItems: items.map(item => ({
+          ...item.order_items,
+          product: item.products
+        })) };
       })
     );
 
@@ -279,7 +288,14 @@ export class DatabaseStorage implements IStorage {
       .where(eq(orderTracking.orderId, order.id))
       .orderBy(desc(orderTracking.timestamp));
 
-    return { ...order, orderItems: items, tracking };
+    return { 
+      ...order, 
+      orderItems: items.map(item => ({
+        ...item.order_items,
+        product: item.products
+      })), 
+      tracking 
+    };
   }
 
   async updateOrderStatus(id: string, status: string): Promise<Order | undefined> {
@@ -317,7 +333,14 @@ export class DatabaseStorage implements IStorage {
       .where(eq(orderTracking.orderId, order.id))
       .orderBy(desc(orderTracking.timestamp));
 
-    return { ...order, orderItems: items, tracking };
+    return { 
+      ...order, 
+      orderItems: items.map(item => ({
+        ...item.order_items,
+        product: item.products
+      })), 
+      tracking 
+    };
   }
 
   // Order tracking operations
@@ -336,12 +359,17 @@ export class DatabaseStorage implements IStorage {
 
   // Wishlist operations
   async getWishlist(userId: string): Promise<(WishlistItem & { product: Product })[]> {
-    return await db
+    const result = await db
       .select()
       .from(wishlist)
       .innerJoin(products, eq(wishlist.productId, products.id))
       .where(eq(wishlist.userId, userId))
       .orderBy(desc(wishlist.createdAt));
+    
+    return result.map(row => ({
+      ...row.wishlist,
+      product: row.products
+    }));
   }
 
   async addToWishlist(wishlistItem: InsertWishlistItem): Promise<WishlistItem> {
@@ -353,17 +381,22 @@ export class DatabaseStorage implements IStorage {
     const result = await db
       .delete(wishlist)
       .where(and(eq(wishlist.userId, userId), eq(wishlist.productId, productId)));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   // Review operations
   async getProductReviews(productId: string): Promise<(Review & { user: User })[]> {
-    return await db
+    const result = await db
       .select()
       .from(reviews)
       .innerJoin(users, eq(reviews.userId, users.id))
       .where(eq(reviews.productId, productId))
       .orderBy(desc(reviews.createdAt));
+    
+    return result.map(row => ({
+      ...row.reviews,
+      user: row.users
+    }));
   }
 
   async addReview(review: InsertReview): Promise<Review> {
