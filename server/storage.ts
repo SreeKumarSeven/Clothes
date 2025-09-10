@@ -15,6 +15,7 @@ import {
   type InsertCartItem,
   type Order,
   type InsertOrder,
+  type InsertOrderInput,
   type OrderItem,
   type InsertOrderItem,
   type OrderTracking,
@@ -54,7 +55,7 @@ export interface IStorage {
   clearCart(userId: string): Promise<boolean>;
   
   // Order operations
-  createOrder(order: InsertOrder, items: InsertOrderItem[]): Promise<Order>;
+  createOrder(order: InsertOrderInput, items: InsertOrderItem[]): Promise<Order>;
   getOrders(userId: string): Promise<(Order & { orderItems: (OrderItem & { product: Product })[] })[]>;
   getOrder(id: string): Promise<(Order & { orderItems: (OrderItem & { product: Product })[], tracking: OrderTracking[] }) | undefined>;
   updateOrderStatus(id: string, status: string): Promise<Order | undefined>;
@@ -222,7 +223,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Order operations
-  async createOrder(order: InsertOrder, items: InsertOrderItem[]): Promise<Order> {
+  async createOrder(order: InsertOrderInput, items: InsertOrderItem[]): Promise<Order> {
     return await db.transaction(async (tx) => {
       // Generate order number
       const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
