@@ -21,6 +21,7 @@ import {
   ChevronDown
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import type { CartItem, Product, WishlistItem } from "@shared/schema";
 import CartSidebar from "@/components/cart/cart-sidebar";
 
 export default function Header() {
@@ -30,12 +31,12 @@ export default function Header() {
   const [showCart, setShowCart] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  const { data: cartItems = [] } = useQuery({
+  const { data: cartItems = [] } = useQuery<(CartItem & { product: Product })[]>({
     queryKey: ["/api/cart"],
     enabled: isAuthenticated,
   });
 
-  const { data: wishlistItems = [] } = useQuery({
+  const { data: wishlistItems = [] } = useQuery<(WishlistItem & { product: Product })[]>({
     queryKey: ["/api/wishlist"], 
     enabled: isAuthenticated,
   });

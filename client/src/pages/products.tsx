@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import type { Product } from "@shared/schema";
 import { useLocation } from "wouter";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
@@ -35,7 +36,7 @@ export default function Products() {
     setSortBy(params.get('sort') || 'newest');
   }, [location]);
 
-  const { data: products = [], isLoading } = useQuery({
+  const { data: products = [], isLoading } = useQuery<Product[]>({
     queryKey: ["/api/products", { category, search: searchQuery, limit: 50 }],
   });
 

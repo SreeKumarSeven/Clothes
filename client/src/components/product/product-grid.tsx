@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import ProductCard from "./product-card";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Product } from "@shared/schema";
 
 interface ProductGridProps {
   category?: string;
@@ -9,7 +10,7 @@ interface ProductGridProps {
   limit?: number;
   offset?: number;
   excludeId?: string;
-  products?: any[];
+  products?: Product[];
   viewMode?: "grid" | "list";
   className?: string;
 }
@@ -25,14 +26,14 @@ export default function ProductGrid({
   viewMode = "grid",
   className = "",
 }: ProductGridProps) {
-  const { data: fetchedProducts = [], isLoading } = useQuery({
+  const { data: fetchedProducts = [], isLoading } = useQuery<Product[]>({
     queryKey: ["/api/products", { category, search, featured, limit, offset }],
     enabled: !providedProducts,
   });
 
   const products = providedProducts || fetchedProducts;
   const filteredProducts = excludeId 
-    ? products.filter((product: any) => product.id !== excludeId)
+    ? products.filter((product) => product.id !== excludeId)
     : products;
 
   if (isLoading && !providedProducts) {
@@ -72,7 +73,7 @@ export default function ProductGrid({
       } ${className}`}
       data-testid="product-grid"
     >
-      {filteredProducts.map((product: any, index: number) => (
+      {filteredProducts.map((product, index: number) => (
         <ProductCard
           key={product.id}
           product={product}

@@ -121,18 +121,16 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(products.isFeatured, true));
     }
     
-    let query = db.select().from(products).where(and(...conditions))
+    const baseQuery = db.select().from(products).where(and(...conditions))
       .orderBy(desc(products.createdAt));
     
-    if (filters?.limit) {
-      query = query.limit(filters.limit);
+    if (filters?.limit && filters?.offset) {
+      return await baseQuery.limit(filters.limit).offset(filters.offset);
+    } else if (filters?.limit) {
+      return await baseQuery.limit(filters.limit);
+    } else {
+      return await baseQuery;
     }
-    
-    if (filters?.offset) {
-      query = query.offset(filters.offset);
-    }
-    
-    return await query;
   }
 
   async getProduct(id: string): Promise<Product | undefined> {
@@ -219,7 +217,7 @@ export class DatabaseStorage implements IStorage {
 
   async clearCart(userId: string): Promise<boolean> {
     const result = await db.delete(cartItems).where(eq(cartItems.userId, userId));
-    return result.rowCount >= 0;
+    return (result.rowCount ?? 0) >= 0;
   }
 
   // Order operations

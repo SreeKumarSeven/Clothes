@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { ShoppingBag, Heart, Clock, Truck } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import type { Order, OrderItem, Product, WishlistItem } from "@shared/schema";
 
 export default function Home() {
   const { user, isLoading, isAuthenticated } = useAuth();
@@ -29,12 +30,12 @@ export default function Home() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
-  const { data: recentOrders } = useQuery({
+  const { data: recentOrders } = useQuery<(Order & { orderItems: (OrderItem & { product: Product })[] })[]>({
     queryKey: ["/api/orders"],
     enabled: isAuthenticated,
   });
 
-  const { data: wishlistItems } = useQuery({
+  const { data: wishlistItems } = useQuery<(WishlistItem & { product: Product })[]>({
     queryKey: ["/api/wishlist"],
     enabled: isAuthenticated,
   });

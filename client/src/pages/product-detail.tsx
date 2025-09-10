@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "wouter";
+import type { Product, Review, WishlistItem } from "@shared/schema";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -40,17 +41,17 @@ export default function ProductDetail() {
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState("");
 
-  const { data: product, isLoading } = useQuery({
-    queryKey: ["/api/products", id],
+  const { data: product, isLoading } = useQuery<Product>({
+    queryKey: [`/api/products/${id}`],
     enabled: !!id,
   });
 
-  const { data: reviews = [] } = useQuery({
-    queryKey: ["/api/products", id, "reviews"],
+  const { data: reviews = [] } = useQuery<Review[]>({
+    queryKey: [`/api/products/${id}/reviews`],
     enabled: !!id,
   });
 
-  const { data: wishlistItems = [] } = useQuery({
+  const { data: wishlistItems = [] } = useQuery<(WishlistItem & { product: Product })[]>({
     queryKey: ["/api/wishlist"],
     enabled: isAuthenticated,
   });
@@ -59,10 +60,10 @@ export default function ProductDetail() {
 
   const addToCartMutation = useMutation({
     mutationFn: async () => {
-      if (!selectedSize && product?.sizes?.length > 0) {
+      if (!selectedSize && product?.sizes && product.sizes.length > 0) {
         throw new Error("Please select a size");
       }
-      if (!selectedColor && product?.colors?.length > 0) {
+      if (!selectedColor && product?.colors && product.colors.length > 0) {
         throw new Error("Please select a color");
       }
       
@@ -466,16 +467,16 @@ export default function ProductDetail() {
                         </dl>
                       </div>
                       
-                      {(product.sizes?.length > 0 || product.colors?.length > 0) && (
+                      {((product.sizes && product.sizes.length > 0) || (product.colors && product.colors.length > 0)) && (
                         <div>
                           <h4 className="font-medium text-foreground mb-3">Available Options</h4>
-                          {product.sizes?.length > 0 && (
+                          {product.sizes && product.sizes.length > 0 && (
                             <div className="mb-3">
                               <p className="text-sm text-muted-foreground mb-1">Sizes:</p>
-                              <p className="font-medium">{product.sizes.join(", ")}</p>
+                              <p className="font-medium">{product.sizes?.join(", ")}</p>
                             </div>
                           )}
-                          {product.colors?.length > 0 && (
+                          {product.colors && product.colors.length > 0 && (
                             <div>
                               <p className="text-sm text-muted-foreground mb-1">Colors:</p>
                               <p className="font-medium">{product.colors.join(", ")}</p>
