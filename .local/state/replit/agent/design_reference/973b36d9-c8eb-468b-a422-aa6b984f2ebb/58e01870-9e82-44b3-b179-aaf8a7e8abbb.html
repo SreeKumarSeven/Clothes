@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleHub - Fashion E-commerce Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    borderRadius: {
+                        lg: "var(--radius)",
+                        md: "calc(var(--radius) - 2px)",
+                        sm: "calc(var(--radius) - 4px)",
+                    },
+                    colors: {
+                        background: "var(--background)",
+                        foreground: "var(--foreground)",
+                        card: {
+                            DEFAULT: "var(--card)",
+                            foreground: "var(--card-foreground)",
+                        },
+                        popover: {
+                            DEFAULT: "var(--popover)",
+                            foreground: "var(--popover-foreground)",
+                        },
+                        primary: {
+                            DEFAULT: "var(--primary)",
+                            foreground: "var(--primary-foreground)",
+                        },
+                        secondary: {
+                            DEFAULT: "var(--secondary)",
+                            foreground: "var(--secondary-foreground)",
+                        },
+                        muted: {
+                            DEFAULT: "var(--muted)",
+                            foreground: "var(--muted-foreground)",
+                        },
+                        accent: {
+                            DEFAULT: "var(--accent)",
+                            foreground: "var(--accent-foreground)",
+                        },
+                        destructive: {
+                            DEFAULT: "var(--destructive)",
+                            foreground: "var(--destructive-foreground)",
+                        },
+                        border: "var(--border)",
+                        input: "var(--input)",
+                        ring: "var(--ring)",
+                        chart: {
+                            "1": "var(--chart-1)",
+                            "2": "var(--chart-2)",
+                            "3": "var(--chart-3)",
+                            "4": "var(--chart-4)",
+                            "5": "var(--chart-5)",
+                        }
+                    },
+                    fontFamily: {
+                        sans: ["var(--font-sans)"],
+                        serif: ["var(--font-serif)"],
+                        mono: ["var(--font-mono)"],
+                    }
+                },
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background: hsl(0 0% 100%);
+            --foreground: hsl(222.2 84% 4.9%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(222.2 84% 4.9%);
+            --popover: hsl(0 0% 100%);
+            --popover-foreground: hsl(222.2 84% 4.9%);
+            --primary: hsl(221.2 83.2% 53.3%);
+            --primary-foreground: hsl(210 40% 98%);
+            --secondary: hsl(210 40% 96%);
+            --secondary-foreground: hsl(222.2 84% 4.9%);
+            --muted: hsl(210 40% 96%);
+            --muted-foreground: hsl(215.4 16.3% 46.9%);
+            --accent: hsl(24.6 95% 53.1%);
+            --accent-foreground: hsl(210 40% 98%);
+            --destructive: hsl(0 84.2% 60.2%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(214.3 31.8% 91.4%);
+            --input: hsl(214.3 31.8% 91.4%);
+            --ring: hsl(221.2 83.2% 53.3%);
+            --radius: 0.75rem;
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --chart-1: hsl(12 76% 61%);
+            --chart-2: hsl(173 58% 39%);
+            --chart-3: hsl(197 37% 24%);
+            --chart-4: hsl(43 74% 66%);
+            --chart-5: hsl(27 87% 67%);
+        }
+        body {
+            font-family: var(--font-sans);
+        }
+        .mega-menu {
+            transform: translateY(-10px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .mega-menu.show {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground">
+    <!-- @COMPONENT: Header -->
+    <!-- Top Banner -->
+    <div class="bg-primary text-primary-foreground py-2 px-4 text-sm text-center">
+        <span class="font-medium">Free Shipping on orders above ₹999 | Use code: FREESHIP</span>
+    </div>
+
+    <!-- Main Header -->
+    <header class="bg-card border-b border-border sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-2">
+                        <div class="bg-primary text-primary-foreground rounded-lg p-2">
+                            <i class="fas fa-tshirt text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-primary">StyleHub</span>
+                    </div>
+
+                    <!-- Main Navigation -->
+                    <nav class="hidden lg:flex items-center space-x-8">
+                        <div class="relative group">
+                            <button class="flex items-center space-x-1 text-foreground hover:text-primary transition-colors" data-event="click:toggleMegaMenu">
+                                <span class="font-medium">Men</span>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="relative group">
+                            <button class="flex items-center space-x-1 text-foreground hover:text-primary transition-colors">
+                                <span class="font-medium">Women</span>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="relative group">
+                            <button class="flex items-center space-x-1 text-foreground hover:text-primary transition-colors">
+                                <span class="font-medium">Kids</span>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                        </div>
+                        <a href="#" class="font-medium text-foreground hover:text-primary transition-colors">Accessories</a>
+                        <a href="#" class="font-medium text-accent hover:text-accent/80 transition-colors">Sale</a>
+                    </nav>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-xl mx-8 hidden md:block">
+                    <div class="relative">
+                        <input type="text" placeholder="Search for clothing, brands and more..." 
+                               class="w-full bg-secondary border border-border rounded-lg pl-4 pr-12 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent" data-implementation="Search functionality with AI-powered suggestions">
+                        <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Side Actions -->
+                <div class="flex items-center space-x-6">
+                    <!-- Track Order -->
+                    <button class="hidden lg:flex items-center space-x-2 text-foreground hover:text-primary transition-colors" data-event="click:openTrackingModal">
+                        <i class="fas fa-truck text-lg"></i>
+                        <span class="font-medium">Track</span>
+                    </button>
+
+                    <!-- Account -->
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 text-foreground hover:text-primary transition-colors">
+                            <i class="fas fa-user text-lg"></i>
+                            <span class="hidden lg:inline font-medium">Account</span>
+                        </button>
+                    </div>
+
+                    <!-- Wishlist -->
+                    <button class="relative text-foreground hover:text-primary transition-colors">
+                        <i class="fas fa-heart text-lg"></i>
+                        <span class="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium" data-bind="wishlist.count">3</span>
+                    </button>
+
+                    <!-- Cart -->
+                    <button class="relative text-foreground hover:text-primary transition-colors" data-event="click:openCart">
+                        <i class="fas fa-shopping-bag text-lg"></i>
+                        <span class="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium" data-bind="cart.itemCount">2</span>
+                    </button>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button class="lg:hidden text-foreground">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <!-- @COMPONENT: HeroSection -->
+    <section class="relative bg-gradient-to-r from-primary to-accent text-primary-foreground">
+        <div class="container mx-auto px-4 py-16 lg:py-24">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <h1 class="text-4xl lg:text-6xl font-bold leading-tight">
+                        Fashion That Speaks <span class="text-accent-foreground">Your Style</span>
+                    </h1>
+                    <p class="text-xl text-primary-foreground/90">
+                        Discover the latest trends in clothing with fast delivery and easy returns. Shop from over 10,000+ styles.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="bg-accent text-accent-foreground px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent/90 transition-colors">
+                            Shop Now
+                        </button>
+                        <button class="border border-primary-foreground text-primary-foreground px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary-foreground hover:text-primary transition-colors">
+                            View Collections
+                        </button>
+                    </div>
+                </div>
+                <div class="relative">
+                    <!-- Fashion model wearing trendy outfit with urban background -->
+                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=900" alt="Fashion model wearing trendy outfit" class="rounded-2xl shadow-2xl w-full max-w-md mx-auto">
+                    <div class="absolute -bottom-6 -right-6 bg-card text-card-foreground p-4 rounded-xl shadow-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-primary/10 p-2 rounded-lg">
+                                <i class="fas fa-shipping-fast text-primary"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Fast Delivery</p>
+                                <p class="text-sm text-muted-foreground">2-3 days</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HeroSection -->
+
+    <!-- @COMPONENT: CategoryGrid -->
+    <section class="py-16 bg-secondary/30">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl lg:text-4xl font-bold text-foreground mb-4">Shop by Category</h2>
+                <p class="text-lg text-muted-foreground">Explore our wide range of fashion categories</p>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="group cursor-pointer">
+                    <div class="bg-card rounded-2xl p-6 text-center hover:shadow-lg transition-shadow">
+                        <!-- Men's casual clothing display with shirts and accessories -->
+                        <img src="https://images.unsplash.com/photo-1516826957135-700dedea698c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=300" alt="Men's clothing collection" class="w-full h-48 object-cover rounded-xl mb-4">
+                        <h3 class="text-xl font-semibold text-foreground mb-2">Men's Wear</h3>
+                        <p class="text-muted-foreground">5000+ Products</p>
+                    </div>
+                </div>
+
+                <div class="group cursor-pointer">
+                    <div class="bg-card rounded-2xl p-6 text-center hover:shadow-lg transition-shadow">
+                        <!-- Women's fashion collection with dresses and accessories -->
+                        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=300" alt="Women's clothing collection" class="w-full h-48 object-cover rounded-xl mb-4">
+                        <h3 class="text-xl font-semibold text-foreground mb-2">Women's Wear</h3>
+                        <p class="text-muted-foreground">7500+ Products</p>
+                    </div>
+                </div>
+
+                <div class="group cursor-pointer">
+                    <div class="bg-card rounded-2xl p-6 text-center hover:shadow-lg transition-shadow">
+                        <!-- Children's colorful clothing and playful outfits -->
+                        <img src="https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=300" alt="Kids clothing collection" class="w-full h-48 object-cover rounded-xl mb-4">
+                        <h3 class="text-xl font-semibold text-foreground mb-2">Kids Wear</h3>
+                        <p class="text-muted-foreground">2000+ Products</p>
+                    </div>
+                </div>
+
+                <div class="group cursor-pointer">
+                    <div class="bg-card rounded-2xl p-6 text-center hover:shadow-lg transition-shadow">
+                        <!-- Fashion accessories including bags, jewelry, and shoes -->
+                        <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=300" alt="Fashion accessories collection" class="w-full h-48 object-cover rounded-xl mb-4">
+                        <h3 class="text-xl font-semibold text-foreground mb-2">Accessories</h3>
+                        <p class="text-muted-foreground">1500+ Products</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: CategoryGrid -->
+
+    <!-- @COMPONENT: FeaturedProducts -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between mb-12">
+                <div>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-foreground mb-4">Trending Now</h2>
+                    <p class="text-lg text-muted-foreground">Discover what's popular this season</p>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="bg-secondary text-secondary-foreground px-6 py-2 rounded-lg font-medium hover:bg-secondary/80 transition-colors">All</button>
+                    <button class="text-muted-foreground px-6 py-2 rounded-lg font-medium hover:bg-secondary hover:text-secondary-foreground transition-colors">Men</button>
+                    <button class="text-muted-foreground px-6 py-2 rounded-lg font-medium hover:bg-secondary hover:text-secondary-foreground transition-colors">Women</button>
+                    <button class="text-muted-foreground px-6 py-2 rounded-lg font-medium hover:bg-secondary hover:text-secondary-foreground transition-colors">Kids</button>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- @MAP: products.map(product => ( -->
+                <div class="bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow group cursor-pointer" data-mock="true">
+                    <div class="relative">
+                        <!-- Stylish casual shirt on model or flat lay -->
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=500" alt="Casual shirt product" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
+                        <button class="absolute top-3 right-3 bg-card/80 backdrop-blur-sm p-2 rounded-full hover:bg-card transition-colors">
+                            <i class="fas fa-heart text-muted-foreground hover:text-destructive"></i>
+                        </button>
+                        <div class="absolute top-3 left-3 bg-destructive text-destructive-foreground px-2 py-1 rounded-md text-xs font-medium">
+                            -25%
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors" data-bind="product.name">Premium Cotton Shirt</h3>
+                        <p class="text-sm text-muted-foreground mb-3" data-bind="product.brand">StyleHub Essentials</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-lg font-bold text-foreground" data-bind="product.salePrice">₹1,499</span>
+                                <span class="text-sm text-muted-foreground line-through" data-bind="product.originalPrice">₹1,999</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                <span class="text-sm text-muted-foreground" data-bind="product.rating">4.5</span>
+                            </div>
+                        </div>
+                        <button class="w-full bg-primary text-primary-foreground py-2.5 rounded-lg font-medium mt-4 hover:bg-primary/90 transition-colors" data-event="click:addToCart">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow group cursor-pointer" data-mock="true">
+                    <div class="relative">
+                        <!-- Elegant women's dress on model or flat lay -->
+                        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=500" alt="Women's dress product" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
+                        <button class="absolute top-3 right-3 bg-card/80 backdrop-blur-sm p-2 rounded-full hover:bg-card transition-colors">
+                            <i class="fas fa-heart text-destructive"></i>
+                        </button>
+                        <div class="absolute top-3 left-3 bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs font-medium">
+                            New
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors" data-bind="product.name">Elegant Summer Dress</h3>
+                        <p class="text-sm text-muted-foreground mb-3" data-bind="product.brand">Fashion Forward</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-lg font-bold text-foreground" data-bind="product.price">₹2,299</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                <span class="text-sm text-muted-foreground" data-bind="product.rating">4.8</span>
+                            </div>
+                        </div>
+                        <button class="w-full bg-primary text-primary-foreground py-2.5 rounded-lg font-medium mt-4 hover:bg-primary/90 transition-colors" data-event="click:addToCart">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow group cursor-pointer" data-mock="true">
+                    <div class="relative">
+                        <!-- Denim jeans product display -->
+                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=500" alt="Denim jeans product" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
+                        <button class="absolute top-3 right-3 bg-card/80 backdrop-blur-sm p-2 rounded-full hover:bg-card transition-colors">
+                            <i class="fas fa-heart text-muted-foreground hover:text-destructive"></i>
+                        </button>
+                        <div class="absolute top-3 left-3 bg-accent text-accent-foreground px-2 py-1 rounded-md text-xs font-medium">
+                            Best Seller
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors" data-bind="product.name">Classic Denim Jeans</h3>
+                        <p class="text-sm text-muted-foreground mb-3" data-bind="product.brand">Urban Fit</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-lg font-bold text-foreground" data-bind="product.price">₹1,799</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                <span class="text-sm text-muted-foreground" data-bind="product.rating">4.6</span>
+                            </div>
+                        </div>
+                        <button class="w-full bg-primary text-primary-foreground py-2.5 rounded-lg font-medium mt-4 hover:bg-primary/90 transition-colors" data-event="click:addToCart">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow group cursor-pointer" data-mock="true">
+                    <div class="relative">
+                        <!-- Sneakers product photography -->
+                        <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=500" alt="Sneakers product" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
+                        <button class="absolute top-3 right-3 bg-card/80 backdrop-blur-sm p-2 rounded-full hover:bg-card transition-colors">
+                            <i class="fas fa-heart text-muted-foreground hover:text-destructive"></i>
+                        </button>
+                        <div class="absolute top-3 left-3 bg-chart-2 text-white px-2 py-1 rounded-md text-xs font-medium">
+                            Eco-Friendly
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors" data-bind="product.name">Sport Sneakers</h3>
+                        <p class="text-sm text-muted-foreground mb-3" data-bind="product.brand">Active Wear</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-lg font-bold text-foreground" data-bind="product.price">₹3,299</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                <span class="text-sm text-muted-foreground" data-bind="product.rating">4.7</span>
+                            </div>
+                        </div>
+                        <button class="w-full bg-primary text-primary-foreground py-2.5 rounded-lg font-medium mt-4 hover:bg-primary/90 transition-colors" data-event="click:addToCart">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+
+            <div class="text-center mt-12">
+                <button class="bg-secondary text-secondary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-secondary/80 transition-colors">
+                    View All Products
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: FeaturedProducts -->
+
+    <!-- @COMPONENT: DeliveryTracking -->
+    <section class="py-16 bg-gradient-to-r from-primary/5 to-accent/5">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl lg:text-4xl font-bold text-foreground mb-4">Track Your Order</h2>
+                <p class="text-lg text-muted-foreground">Real-time tracking for all your orders</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="bg-card rounded-2xl p-8 shadow-lg">
+                    <h3 class="text-2xl font-bold text-foreground mb-6">Order Tracking</h3>
+                    
+                    <!-- Order Input -->
+                    <div class="space-y-4 mb-8">
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Order ID</label>
+                            <input type="text" placeholder="Enter your order ID" 
+                                   class="w-full bg-secondary border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent" data-implementation="Order tracking API integration">
+                        </div>
+                        <button class="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors" data-event="click:trackOrder">
+                            Track Order
+                        </button>
+                    </div>
+
+                    <!-- Mock Tracking Result -->
+                    <div class="space-y-4" data-mock="true">
+                        <div class="flex items-center justify-between p-4 bg-secondary/50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-primary p-2 rounded-full">
+                                    <i class="fas fa-check text-primary-foreground text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-foreground">Order Confirmed</p>
+                                    <p class="text-sm text-muted-foreground">Oct 25, 2:30 PM</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-secondary/50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-primary p-2 rounded-full">
+                                    <i class="fas fa-box text-primary-foreground text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-foreground">Shipped</p>
+                                    <p class="text-sm text-muted-foreground">Oct 26, 11:15 AM</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-accent/10 rounded-lg border border-accent/20">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-accent p-2 rounded-full animate-pulse">
+                                    <i class="fas fa-truck text-accent-foreground text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-foreground">Out for Delivery</p>
+                                    <p class="text-sm text-muted-foreground">Expected: Today, 6:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Delivery truck on the road or logistics center -->
+                    <img src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" alt="Delivery logistics and tracking" class="rounded-2xl shadow-lg w-full">
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-card p-6 rounded-xl text-center shadow-sm">
+                            <div class="bg-primary/10 p-3 rounded-full w-fit mx-auto mb-3">
+                                <i class="fas fa-shipping-fast text-primary text-xl"></i>
+                            </div>
+                            <h4 class="font-semibold text-foreground mb-2">Fast Delivery</h4>
+                            <p class="text-sm text-muted-foreground">2-3 business days</p>
+                        </div>
+
+                        <div class="bg-card p-6 rounded-xl text-center shadow-sm">
+                            <div class="bg-chart-2/10 p-3 rounded-full w-fit mx-auto mb-3">
+                                <i class="fas fa-undo text-chart-2 text-xl"></i>
+                            </div>
+                            <h4 class="font-semibold text-foreground mb-2">Easy Returns</h4>
+                            <p class="text-sm text-muted-foreground">30-day return policy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: DeliveryTracking -->
+
+    <!-- @COMPONENT: SocialProof -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl lg:text-4xl font-bold text-foreground mb-4">What Our Customers Say</h2>
+                <p class="text-lg text-muted-foreground">Join thousands of satisfied customers</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-card p-6 rounded-2xl shadow-sm" data-mock="true">
+                    <div class="flex items-center space-x-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-foreground mb-4">"Amazing quality and fast delivery! The clothes fit perfectly and the customer service is outstanding."</p>
+                    <div class="flex items-center space-x-3">
+                        <!-- Happy customer portrait photo -->
+                        <img src="https://pixabay.com/get/g717d6730bb4d1bfeef159909f337b82f16c807c114aadb12569b4109c051b8cb73a2c8da6998ec020ed8e674e80d28d4e00bd577268a45ecfec62e0d26f682a8_1280.jpg" alt="Customer testimonial" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <p class="font-semibold text-foreground" data-bind="review.customerName">Sarah Johnson</p>
+                            <p class="text-sm text-muted-foreground">Verified Buyer</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card p-6 rounded-2xl shadow-sm" data-mock="true">
+                    <div class="flex items-center space-x-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-foreground mb-4">"Love the variety and quality. The tracking system is so convenient and the mobile app makes shopping easy."</p>
+                    <div class="flex items-center space-x-3">
+                        <!-- Professional male customer photo -->
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=150&h=150" alt="Customer testimonial" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <p class="font-semibold text-foreground" data-bind="review.customerName">Mike Chen</p>
+                            <p class="text-sm text-muted-foreground">Verified Buyer</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card p-6 rounded-2xl shadow-sm" data-mock="true">
+                    <div class="flex items-center space-x-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-foreground mb-4">"Best online shopping experience! The return process is hassle-free and the clothes are exactly as shown."</p>
+                    <div class="flex items-center space-x-3">
+                        <!-- Young female customer with friendly smile -->
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=150&h=150" alt="Customer testimonial" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <p class="font-semibold text-foreground" data-bind="review.customerName">Emma Davis</p>
+                            <p class="text-sm text-muted-foreground">Verified Buyer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <div class="bg-secondary/30 rounded-2xl p-8 max-w-4xl mx-auto">
+                    <div class="grid md:grid-cols-4 gap-8">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary mb-2" data-bind="stats.customers">50K+</div>
+                            <p class="text-sm text-muted-foreground">Happy Customers</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary mb-2" data-bind="stats.orders">1M+</div>
+                            <p class="text-sm text-muted-foreground">Orders Delivered</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary mb-2" data-bind="stats.rating">4.8</div>
+                            <p class="text-sm text-muted-foreground">Average Rating</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary mb-2" data-bind="stats.returns">99%</div>
+                            <p class="text-sm text-muted-foreground">Customer Satisfaction</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: SocialProof -->
+
+    <!-- @COMPONENT: MobileAppPromo -->
+    <section class="py-16 bg-gradient-to-r from-primary to-accent text-primary-foreground">
+        <div class="container mx-auto px-4">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-4xl lg:text-5xl font-bold leading-tight">
+                        Shop on the Go with Our Mobile App
+                    </h2>
+                    <p class="text-xl text-primary-foreground/90">
+                        Get exclusive app-only deals, faster checkout, and real-time order tracking. Download now and save 15% on your first order!
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check text-accent-foreground"></i>
+                            <span>Exclusive app-only discounts</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check text-accent-foreground"></i>
+                            <span>One-tap checkout and payment</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check text-accent-foreground"></i>
+                            <span>Push notifications for order updates</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check text-accent-foreground"></i>
+                            <span>Virtual try-on with AR technology</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#" class="bg-card text-card-foreground px-6 py-3 rounded-xl font-semibold flex items-center space-x-3 hover:bg-card/90 transition-colors">
+                            <i class="fab fa-apple text-xl"></i>
+                            <div class="text-left">
+                                <div class="text-xs">Download on the</div>
+                                <div class="text-sm font-bold">App Store</div>
+                            </div>
+                        </a>
+                        <a href="#" class="bg-card text-card-foreground px-6 py-3 rounded-xl font-semibold flex items-center space-x-3 hover:bg-card/90 transition-colors">
+                            <i class="fab fa-google-play text-xl"></i>
+                            <div class="text-left">
+                                <div class="text-xs">Get it on</div>
+                                <div class="text-sm font-bold">Google Play</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <!-- Modern smartphone displaying the mobile app interface -->
+                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=800" alt="Mobile app interface on smartphone" class="rounded-3xl shadow-2xl max-w-md mx-auto">
+                    <div class="absolute -top-6 -left-6 bg-accent text-accent-foreground p-4 rounded-2xl shadow-lg">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold">15%</div>
+                            <div class="text-sm">OFF</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: MobileAppPromo -->
+
+    <!-- @COMPONENT: Footer -->
+    <footer class="bg-card border-t border-border">
+        <div class="container mx-auto px-4 py-16">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="space-y-6">
+                    <div class="flex items-center space-x-2">
+                        <div class="bg-primary text-primary-foreground rounded-lg p-2">
+                            <i class="fas fa-tshirt text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-primary">StyleHub</span>
+                    </div>
+                    <p class="text-muted-foreground">
+                        Your one-stop destination for trendy fashion. Quality clothing with fast delivery and exceptional customer service.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-youtube text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-foreground mb-6">Shop</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Men's Clothing</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Women's Clothing</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Kids Wear</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Accessories</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Sale Items</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">New Arrivals</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-foreground mb-6">Customer Service</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Track Your Order</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Returns & Exchanges</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Size Guide</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">FAQ</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Shipping Info</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-foreground mb-6">Company</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Careers</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Sustainability</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-border mt-12 pt-8">
+                <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
+                    <p class="text-muted-foreground text-sm">
+                        © 2025 StyleHub. All rights reserved.
+                    </p>
+                    <div class="flex items-center space-x-6">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-shield-alt text-primary"></i>
+                            <span class="text-sm text-muted-foreground">Secure Shopping</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-truck text-primary"></i>
+                            <span class="text-sm text-muted-foreground">Fast Delivery</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-undo text-primary"></i>
+                            <span class="text-sm text-muted-foreground">Easy Returns</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <!-- @COMPONENT: StickyMobileCart -->
+    <div class="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 lg:hidden z-40">
+        <div class="flex items-center justify-between">
+            <div class="text-sm text-muted-foreground">
+                <span data-bind="cart.itemCount">2</span> items in cart
+            </div>
+            <button class="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-semibold" data-event="click:openCart">
+                View Cart (₹<span data-bind="cart.total">3,798</span>)
+            </button>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: StickyMobileCart -->
+
+    <script>
+        (function() {
+            // TODO: Implement cart management, product filtering, order tracking, and mobile app integration
+            // TODO: Add real-time inventory updates and AI-powered product recommendations
+            // TODO: Integrate with payment gateways and delivery tracking APIs
+            
+            // Mock interactive functionality for demonstration
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('StyleHub E-commerce Platform Loaded');
+                
+                // Mock cart functionality
+                let cartCount = 2;
+                const cartButtons = document.querySelectorAll('[data-event*="addToCart"]');
+                cartButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        cartCount++;
+                        document.querySelectorAll('[data-bind="cart.itemCount"]').forEach(el => {
+                            el.textContent = cartCount;
+                        });
+                        
+                        // Show feedback
+                        const originalText = this.textContent;
+                        this.textContent = 'Added!';
+                        this.classList.add('bg-chart-2');
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.classList.remove('bg-chart-2');
+                        }, 1000);
+                    });
+                });
+
+                // Mock wishlist functionality
+                const wishlistButtons = document.querySelectorAll('.fa-heart');
+                wishlistButtons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        this.classList.toggle('text-destructive');
+                        this.classList.toggle('text-muted-foreground');
+                    });
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
